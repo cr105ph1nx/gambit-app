@@ -1,0 +1,27 @@
+GET http://localhost:3000/admins
+
+###
+GET http://localhost:3000/admins/608dbabccf12adcc654a879e
+
+###
+POST http://localhost:3000/admins
+Content-Type: application/json
+
+{
+    "email": "OpenMindsClub",
+    "password": "e4#",
+    "club_id": 1
+}
+
+###
+PATCH http://localhost:3000/admins/608dbabccf12adcc654a879e
+Content-Type: application/json
+
+{
+    "email": "OpenMindsClub",
+    "password": "e4",
+    "club_id": 1
+}
+
+###
+DELETE http://localhost:3000/admins/608dbabccf12adcc654a879e

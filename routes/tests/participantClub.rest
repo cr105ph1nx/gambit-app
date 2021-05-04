@@ -1,0 +1,27 @@
+GET http://localhost:3000/participantClubs
+
+###
+GET http://localhost:3000/participantClubs/608dbdcac7f520d8ed7a72c8
+
+###
+POST http://localhost:3000/participantClubs
+Content-Type: application/json
+
+{
+    "club_id": 1,
+    "participant_id": 1,
+    "piece": "q"
+}
+
+###
+PATCH http://localhost:3000/participantClubs/608dbdfcc7f520d8ed7a72c9
+Content-Type: application/json
+
+{
+    "club_id": 1,
+    "participant_id": 2,
+    "piece": "q"
+}
+
+###
+DELETE http://localhost:3000/participantClubs/608dbdfcc7f520d8ed7a72c9

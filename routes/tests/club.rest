@@ -1,0 +1,30 @@
+GET http://localhost:3000/clubs
+
+###
+GET http://localhost:3000/clubs/608db71f6714cabe65a50120
+
+###
+POST http://localhost:3000/clubs
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "OpenMindsClub",
+    "position": "e4#",
+    "logo": "img",
+    "description": "lorem ipsum lorem ipsum"
+}
+
+###
+PATCH http://localhost:3000/clubs/1
+Content-Type: application/json
+
+{
+    "name": "OpenMindsClub",
+    "position": "e4",
+    "logo": "img",
+    "description": "philosophie du libre open source"
+}
+
+###
+DELETE http://localhost:3000/clubs/608db71f6714cabe65a50120

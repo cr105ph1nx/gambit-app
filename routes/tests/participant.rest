@@ -1,0 +1,31 @@
+GET http://localhost:3000/participants
+
+###
+GET http://localhost:3000/participants/1
+
+###
+POST http://localhost:3000/participants
+Content-Type: application/json
+
+{
+    "id": 1,
+    "username": "cr105ph1nx",
+    "email": "lilia.mehamli@protonmail.com",
+    "password": "kdfsdfksjfise87KDS#",
+    "startingpoint": 1
+}
+
+###
+PATCH http://localhost:3000/participants/1
+Content-Type: application/json
+
+{
+    "email": "lilly.mehamli@protonmail.com",
+    "startingpoint": 5,
+    "flagsRemaining": 5,
+    "score": 100,
+    "pendingAuthorization": false 
+}
+
+###
+DELETE http://localhost:3000/participants/1
