@@ -1,0 +1,29 @@
+GET http://localhost:3000/users
+
+###
+GET http://localhost:3000/users/60927d00a420c537f45b5d61
+
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "email": "test2@test2.com",
+    "username": "jidsfsdf885",
+    "password": "e4",
+    "role": "admin"
+}
+
+###
+PATCH http://localhost:3000/users/609279367ff36b2598c43faf
+Content-Type: application/json
+
+{
+    "email": "test@test.net",
+    "username": "test",
+    "password": "e4",
+    "role": "admin"
+}
+
+###
+DELETE http://localhost:3000/users/609279367ff36b2598c43faf
