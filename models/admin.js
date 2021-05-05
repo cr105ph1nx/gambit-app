@@ -20,10 +20,6 @@ const adminSchema = mongoose.Schema({
       "Please fill a valid username",
     ],
   },
-  password: {
-    type: String,
-    required: "Password is required",
-  },
   club_id: {
     type: Number,
     required: "Club ID is required",

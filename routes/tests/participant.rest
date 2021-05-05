@@ -8,24 +8,19 @@ POST http://localhost:3000/participants
 Content-Type: application/json
 
 {
-    "id": 1,
     "username": "cr105ph1nx",
     "email": "lilia.mehamli@protonmail.com",
-    "password": "kdfsdfksjfise87KDS#",
+    "password": "$2y$10$Hg07Or0QxsMkrIbfXLN0Nu44zrhqp/oYAxnkfIBJ63qAlUGpixWny",
     "startingpoint": 1
 }
 
 ###
-PATCH http://localhost:3000/participants/1
+PATCH http://localhost:3000/participants/6092aeaf106cac1f74ec21f3
 Content-Type: application/json
 
 {
-    "email": "lilly.mehamli@protonmail.com",
-    "startingpoint": 5,
-    "flagsRemaining": 5,
-    "score": 100,
-    "pendingAuthorization": false 
+    "email": "lilly.mehamli@live.com"
 }
 
 ###
-DELETE http://localhost:3000/participants/1
+DELETE http://localhost:3000/participants/6092b0fa8fe5832dd4e404a9

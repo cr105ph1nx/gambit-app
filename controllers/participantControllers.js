@@ -1,4 +1,5 @@
 const Participant = require("../models/participant");
+const User = require("../models/user");
 
 module.exports = {
   // Find a participant by ID
@@ -40,16 +41,25 @@ module.exports = {
 
   // Creating a participant by ID
   async createParticipant(req, res, next) {
+    // create participant
     const participant = new Participant({
-      _id: req.body.id,
-      username: req.body.username,
       email: req.body.email,
-      password: req.body.password,
+      username: req.body.username,
       startingpoint: req.body.startingpoint,
     });
+
+    // create user
+    const user = new User({
+      email: req.body.email,
+      password: req.body.password,
+      role: "participant",
+    });
+
     try {
       const newParticipant = await participant.save();
-      res.status(201).json(newParticipant);
+      const newUser = await user.save();
+
+      res.status(201).json(newParticipant, newUser);
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -60,7 +70,18 @@ module.exports = {
   // Updating a particpant
   async updateParticipant(req, res, next) {
     if (req.body.username != null) res.participant.username = req.body.username;
-    if (req.body.email != null) res.participant.email = req.body.email;
+    if (req.body.email != null) {
+      // update user email
+      await User.findOneAndUpdate(
+        res.participant.email,
+        { email: req.body.email },
+        {
+          new: true,
+        }
+      );
+      // update particpant email
+      res.participant.email = req.body.email;
+    }
     if (req.body.startingpoint != null)
       res.participant.startingpoint = req.body.startingpoint;
     if (req.body.currentCase != null)
@@ -85,7 +106,19 @@ module.exports = {
   // Deleting a participant
   async deleteParticipant(req, res, next) {
     try {
+      // delete user asssociated with participant account
+      await User.findOneAndDelete(
+        { email: res.participant.email },
+        function (err, docs) {
+          if (err) console.log(err);
+          else {
+            console.log(docs);
+          }
+        }
+      );
+      //delete particpaitn account
       await res.participant.remove();
+
       res.json({ message: "Deleted Participant" });
     } catch (err) {
       res.status(500).json({ message: err.message });

@@ -19,4 +19,7 @@ router.patch("/:id", userController.getUser, userController.updateUser);
 // Deleting a user
 router.delete("/:id", userController.getUser, userController.deleteUser);
 
+// lOGIN ROUTE
+router.post("/login", userController.loginValidation);
+
 module.exports = router;

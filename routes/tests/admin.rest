@@ -8,22 +8,19 @@ POST http://localhost:3000/admins
 Content-Type: application/json
 
 {
-    "email": "OpenMindsClub@gmail.com",
-    "username": "OpenMindsClub",
-    "password": "e4#",
+    "email": "microclub@usthb.dz",
+    "username": "MicroClub",
+    "password": "ufdghdf",
     "club_id": 1
 }
 
 ###
-PATCH http://localhost:3000/admins/6092824e4c22863c185d13b9
+PATCH http://localhost:3000/admins/6092a334f79a542ec4462640
 Content-Type: application/json
 
 {
-    "email": "OpenMindsClub@gmail.com",
-    "username": "OpenMindsClub",
-    "password": "e4",
-    "club_id": 1
+    "email": "microclub@usthb.com"
 }
 
 ###
-DELETE http://localhost:3000/admins/6092824e4c22863c185d13b9
+DELETE http://localhost:3000/admins/6092b06bc15d143d208bc865

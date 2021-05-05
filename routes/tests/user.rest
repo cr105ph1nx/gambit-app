@@ -1,29 +1,35 @@
+###GET ALL
 GET http://localhost:3000/users
 
-###
+###GET BY ID
 GET http://localhost:3000/users/60927d00a420c537f45b5d61
 
-###
+###CREATE
 POST http://localhost:3000/users
 Content-Type: application/json
 
 {
     "email": "test2@test2.com",
-    "username": "jidsfsdf885",
     "password": "e4",
     "role": "admin"
 }
 
-###
-PATCH http://localhost:3000/users/609279367ff36b2598c43faf
+###LOGIN
+POST http://localhost:3000/users/login
 Content-Type: application/json
 
 {
-    "email": "test@test.net",
-    "username": "test",
-    "password": "e4",
-    "role": "admin"
+    "email": "lilia.mehamli@protonmail.com",
+    "password": "$2y$10$Hg07Or0QxsMkrIbfXLN0Nu44zrhqp/oYAxnkfIBJ63qAlUGpixWny"
 }
 
-###
-DELETE http://localhost:3000/users/609279367ff36b2598c43faf
+###UPDATE BY ID
+PATCH http://localhost:3000/users/6092af052517473e2c3fe38d
+Content-Type: application/json
+
+{
+    "email": "lilly@test.net"
+}
+
+###DELETE BY ID
+DELETE http://localhost:3000/users/6092ad688a5b7602087aedbd
