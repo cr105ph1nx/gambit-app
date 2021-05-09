@@ -8,9 +8,9 @@ POST http://localhost:3000/participants
 Content-Type: application/json
 
 {
-    "username": "cr105ph1nx",
-    "email": "lilia.mehamli@protonmail.com",
-    "password": "$2y$10$Hg07Or0QxsMkrIbfXLN0Nu44zrhqp/oYAxnkfIBJ63qAlUGpixWny",
+    "username": "cr105ph1nxx",
+    "email": "lilia.mehamli@live.com",
+    "password": "123456",
     "startingpoint": 1
 }
 
