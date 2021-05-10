@@ -2,12 +2,7 @@ import { Form, Input, Button, Alert } from "antd";
 import { useState } from "react";
 import { useHistory, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchLogin,
-  loginPending,
-  loginFail,
-  loginSuccess,
-} from "./loginSlicer";
+import { fetchLogin } from "./loginSlicer";
 
 import Board from "../board/Board";
 import Panel from "../panel/Panel";
@@ -32,15 +27,12 @@ const tailLayout = {
 function Login() {
   let history = useHistory();
   const dispatch = useDispatch();
-  const { error, isAuth, isLoading, role } = useSelector(
-    (state) => state.login
-  );
+  const { error, isLoading, role } = useSelector((state) => state.login);
 
   const [state, setState] = useState({ email: "", password: "" });
 
   const handleChangeEmail = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
     setState({
       email: e.target.value,
       password: state.password,
@@ -49,7 +41,6 @@ function Login() {
 
   const handleChangePassword = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
     setState({
       email: state.email,
       password: e.target.value,
@@ -58,7 +49,6 @@ function Login() {
 
   const handleSubmit = async (e) => {
     try {
-      console.log(state);
       const login = await dispatch(fetchLogin(state));
       if (login && role === "participant") history.push("/board");
       else if (login && role === "admin") history.push("/panel");

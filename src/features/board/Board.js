@@ -9,12 +9,22 @@ import { getRow, getCol } from "./models/BoardSettings";
 import { useEffect, useState } from "react";
 import { Row, Col, Button } from "antd";
 import axios from "axios";
+
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "./boardSlicer";
 
 function Board() {
   let history = useHistory();
+
+  const dispatch = useDispatch();
+  const { error, isLoading, info } = useSelector((state) => state.participant);
   const { role } = useSelector((state) => state.login);
+
+  useEffect(() => {
+    dispatch(fetchData());
+    console.log(info);
+  }, []);
 
   const [userState, setUserState] = useState({
     points: 0,

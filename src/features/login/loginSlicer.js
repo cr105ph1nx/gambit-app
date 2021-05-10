@@ -7,7 +7,6 @@ const initState = {
   isAuth: false,
   role: null,
   error: "",
-  user_info: null,
 };
 
 const loginSlice = createSlice({
@@ -18,20 +17,23 @@ const loginSlice = createSlice({
       state.isLoading = true;
     },
     loginSuccess: (state, { payload }) => {
-      state.isLoading = false;
       state.isAuth = true;
       state.error = "";
       state.role = payload.role;
-      state.user_info = payload.user_info;
     },
     loginFail: (state, { payload }) => {
       state.isLoading = false;
       state.error = payload;
     },
+    setLoading: (state, { payload }) => {
+      state.loading = payload;
+    },
   },
 });
 
 export const fetchLogin = (data) => async (dispatch, getState) => {
+  dispatch(setLoading(true));
+
   const config = {
     method: "post",
     url: signInUrl,
@@ -43,12 +45,9 @@ export const fetchLogin = (data) => async (dispatch, getState) => {
 
   const response = await axios(config)
     .then((response) => {
-      let account = response.data.data;
-      console.log(account);
       dispatch(
         loginSuccess({
-          role: account.role,
-          user_info: account.user_info,
+          role: response.data.data.role,
         })
       );
 
@@ -58,9 +57,10 @@ export const fetchLogin = (data) => async (dispatch, getState) => {
       dispatch(loginFail(error.response.data.error));
     });
 
+  dispatch(setLoading(false));
   return response;
 };
 
 const { reducer, actions } = loginSlice;
-export const { loginPending, loginFail, loginSuccess } = actions;
+export const { loginPending, loginFail, loginSuccess, setLoading } = actions;
 export default reducer;

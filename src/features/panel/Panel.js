@@ -1,11 +1,21 @@
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { Table, Space, Tag, Button } from "antd";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "./panelSlicer";
 
 function Panel() {
   let history = useHistory();
+
+  const dispatch = useDispatch();
+  const { error, isLoading, info } = useSelector((state) => state.admin);
   const { role } = useSelector((state) => state.login);
+
+  useEffect(() => {
+    dispatch(fetchData());
+    console.log(info);
+  }, []);
 
   if (!localStorage.token) history.push("/login");
   if (role !== "admin") history.push("/");
