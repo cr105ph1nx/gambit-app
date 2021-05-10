@@ -1,11 +1,14 @@
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { Table, Space, Tag } from "antd";
+import { Table, Space, Tag, Button } from "antd";
+import { useSelector } from "react-redux";
 
 function Panel() {
   let history = useHistory();
+  const { role } = useSelector((state) => state.login);
 
   if (!localStorage.token) history.push("/login");
+  if (role !== "admin") history.push("/");
   const UNAUTHORIZED = 401;
   const FORBIDDEN = 403;
   axios.interceptors.response.use(
@@ -70,8 +73,16 @@ function Panel() {
     },
   ];
 
+  const handleLogout = () => {
+    history.push("/login");
+    localStorage.removeItem("token");
+  };
+
   return (
     <>
+      <Button type="primary" onClick={handleLogout}>
+        Logout
+      </Button>
       <Table columns={columns} dataSource={data} />
     </>
   );

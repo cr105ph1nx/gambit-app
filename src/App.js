@@ -10,10 +10,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Switch>
-          <Route exact path="/login" component={Login} />
+          <Route path="/login" component={Login} />
           <Route exact path="/board" component={Board} />
           <Route exact path="/panel" component={Panel} />
-          <Route exact path="/" component={() => <Redirect to="/login" />} />
+          <Route path="/" component={() => <Redirect to="/login" />} />
         </Switch>
       </header>
     </div>

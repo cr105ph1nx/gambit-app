@@ -56,18 +56,12 @@ function Login() {
     });
   };
 
-  function handleFormSubmit() {
-    dispatch(fetchLogin(state));
-    if (role === "participant") history.push("/board");
-    else if (role === "admin") history.push("panel");
-  }
-
   const handleSubmit = async (e) => {
     try {
       console.log(state);
-      await dispatch(fetchLogin(state));
-      if (role === "participant") history.push("/board");
-      else if (role === "admin") history.push("panel");
+      const login = await dispatch(fetchLogin(state));
+      if (login && role === "participant") history.push("/board");
+      else if (login && role === "admin") history.push("/panel");
     } catch (err) {
       console.log("Couldn't Log In");
     }
@@ -75,7 +69,7 @@ function Login() {
 
   if (localStorage.token) {
     if (role === "participant") history.push("/board");
-    else if (role === "admin") history.push("panel");
+    else if (role === "admin") history.push("/panel");
   }
 
   return (
@@ -121,6 +115,11 @@ function Login() {
           </Button>
         </Form.Item>
       </Form>
+
+      <Switch>
+        <Route exact path="/board" component={Board} />
+        <Route exact path="/panel" component={Panel} />
+      </Switch>
     </>
   );
 }

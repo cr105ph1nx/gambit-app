@@ -7,12 +7,15 @@ import flag from "./img/finish.png";
 import { getClubs, getStartingCase, getStartingPosition } from "./models";
 import { getRow, getCol } from "./models/BoardSettings";
 import { useEffect, useState } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, Button } from "antd";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Board() {
   let history = useHistory();
+  const { role } = useSelector((state) => state.login);
+
   const [userState, setUserState] = useState({
     points: 0,
     flagsRemaining: 6,
@@ -112,6 +115,7 @@ function Board() {
   }
 
   if (!localStorage.token) history.push("/login");
+  if (role !== "participant") history.push("/");
   const UNAUTHORIZED = 401;
   const FORBIDDEN = 403;
   axios.interceptors.response.use(
@@ -128,12 +132,20 @@ function Board() {
     }
   );
 
+  const handleLogout = () => {
+    history.push("/login");
+    localStorage.removeItem("token");
+  };
+
   return (
     <>
       <Row>
         <Col>
           <Score userState={userState} setUserState={setUserState}></Score>
           <Arsenal userState={userState} setUserState={setUserState}></Arsenal>
+          <Button type="primary" onClick={handleLogout}>
+            Logout
+          </Button>
         </Col>
 
         <Col>

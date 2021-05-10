@@ -7,6 +7,7 @@ const initState = {
   isAuth: false,
   role: null,
   error: "",
+  user_info: null,
 };
 
 const loginSlice = createSlice({
@@ -20,7 +21,8 @@ const loginSlice = createSlice({
       state.isLoading = false;
       state.isAuth = true;
       state.error = "";
-      state.role = payload;
+      state.role = payload.role;
+      state.user_info = payload.user_info;
     },
     loginFail: (state, { payload }) => {
       state.isLoading = false;
@@ -41,11 +43,16 @@ export const fetchLogin = (data) => async (dispatch, getState) => {
 
   const response = await axios(config)
     .then((response) => {
-      let account = response.data.data.user_info;
+      let account = response.data.data;
       console.log(account);
-      dispatch(loginSuccess(response.data.data.role));
+      dispatch(
+        loginSuccess({
+          role: account.role,
+          user_info: account.user_info,
+        })
+      );
 
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("token", response.data.accessToken);
     })
     .catch((error) => {
       dispatch(loginFail(error.response.data.error));
