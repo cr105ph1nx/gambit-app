@@ -22,4 +22,16 @@ router.delete("/:id", userController.getUser, userController.deleteUser);
 // lOGIN ROUTE
 router.post("/login", userController.loginValidation);
 
+// PROFILE ROUTES
+router.post(
+  "/board",
+  userController.loginRequired,
+  userController.participantProfile
+);
+router.post(
+  "/panel",
+  userController.adminRequired,
+  userController.adminProfile
+);
+
 module.exports = router;

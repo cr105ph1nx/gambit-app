@@ -3,6 +3,9 @@ const Admin = require("../models/admin");
 const Participant = require("../models/participant");
 
 const bcrypt = require("bcryptjs");
+const moment = require("moment");
+const jwt = require("jwt-simple");
+const jsonwebtoken = require("jsonwebtoken");
 
 module.exports = {
   // Find user by ID
@@ -159,15 +162,98 @@ module.exports = {
         return res.status(500).json({ message: err.message });
       }
 
+      // Generate an access token
+      const accessToken = jsonwebtoken.sign(
+        { id: user._id, email: user.email, role: user.role },
+        process.env.TOKEN_SECRET
+      );
+
       res.json({
+        accessToken,
         error: null,
         data: {
-          message: "Login successful",
           role: user.role, //send role of the user
           user_info: user_info,
         },
       });
     }
     next();
+  },
+
+  loginRequired(req, res, next) {
+    if (!req.headers.authorization) {
+      return res.status(401).send({ error: "Missing Token" });
+    }
+    var token = req.headers.authorization.split(" ")[1];
+
+    var payload = null;
+
+    try {
+      payload = jwt.decode(token, process.env.TOKEN_SECRET);
+    } catch (err) {
+      return res.status(401).send({ error: "Invalid Token" });
+    }
+
+    if (payload.exp <= moment().unix()) {
+      return res.status(401).send({ error: "Expired Token" });
+    }
+
+    // check if the user exists
+    User.findById(payload.id, (err, user) => {
+      if (!user) {
+        return res.status(401).send({ error: "Account Not Found" });
+      } else {
+        res.user = user;
+        next();
+      }
+    });
+  },
+
+  adminRequired(req, res, next) {
+    if (res.user && res.user.role === "admin") {
+      next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  },
+
+  participantRequired(req, res, next) {
+    if (res.user && res.user.role === "participant") {
+      next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+  },
+
+  async adminProfile(req, res, next) {
+    if (res.user && res.user.role === "admin") {
+      // get user info (admin)
+      let user_info = {};
+      try {
+        user_info = await Admin.findOne({ email: res.user.email });
+      } catch (err) {
+        return res.status(500).json({ message: err.message });
+      }
+      res.send(user_info);
+      next();
+    } else {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  },
+
+  async participantProfile(req, res, next) {
+    if (res.user && res.user.role === "participant") {
+      // get user info (participant)
+      let user_info = {};
+      try {
+        user_info = await Participant.findOne({ email: res.user.email });
+      } catch (err) {
+        return res.status(500).json({ message: err.message });
+      }
+      res.send(user_info);
+      next();
+    } else {
+      return res.status(401).json({ message: "Invalid token" });
+    }
   },
 };
