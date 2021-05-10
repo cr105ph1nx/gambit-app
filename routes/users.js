@@ -30,7 +30,7 @@ router.post(
 );
 router.post(
   "/panel",
-  userController.adminRequired,
+  userController.loginRequired,
   userController.adminProfile
 );
 
