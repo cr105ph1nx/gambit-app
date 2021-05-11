@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const participantControllers = require("../controllers/participantControllers");
+const clubControllers = require("../controllers/clubControllers");
 
 // Getting all participants
 router.get("/", participantControllers.index);
@@ -14,7 +15,11 @@ router.get(
 );
 
 // Creating a participant
-router.post("/", participantControllers.createParticipant);
+router.post(
+  "/",
+  clubControllers.getClubsCount,
+  participantControllers.createParticipant
+);
 
 // Updating a participant
 router.patch(

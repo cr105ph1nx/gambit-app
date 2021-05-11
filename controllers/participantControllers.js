@@ -46,6 +46,7 @@ module.exports = {
       email: req.body.email,
       username: req.body.username,
       startingpoint: req.body.startingpoint,
+      flagsRemaining: res.count - 1,
     });
 
     // create user

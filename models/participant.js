@@ -28,7 +28,7 @@ const participantSchema = mongoose.Schema(
     currentCase: Number,
     flagsRemaining: {
       type: Number,
-      default: 0,
+      required: "FlagsRemaining is required",
     },
     score: {
       type: Number,

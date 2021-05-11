@@ -17,6 +17,21 @@ module.exports = {
     next();
   },
 
+  // Get count of all clubs
+  async getClubsCount(req, res, next) {
+    try {
+      var total = 0;
+      await Club.countDocuments({}, (err, count) => {
+        total = count;
+      });
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+
+    res.count = total;
+    next();
+  },
+
   // Getting all clubs
   async index(req, res, next) {
     try {
