@@ -3,38 +3,46 @@ import axios from "axios";
 import { Table, Space, Tag, Button } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "./panelSlicer";
+import { fetchAdmin } from "../admin/adminSlicer";
+import { fetchRole } from "../login/loginSlicer";
+import { fetchClubParticipants } from "./panelSlicer";
 
 function Panel() {
   let history = useHistory();
 
   const dispatch = useDispatch();
-  const { error, isLoading, info } = useSelector((state) => state.admin);
+  const { club_id } = useSelector((state) => state.admin);
+  const { participantsResults } = useSelector((state) => state.panel);
   const { role } = useSelector((state) => state.login);
 
   useEffect(() => {
-    dispatch(fetchData());
-    console.log(info);
+    dispatch(fetchAdmin());
+    dispatch(fetchClubParticipants({ club_id: club_id }));
+    console.log(participantsResults);
   }, []);
 
-  if (!localStorage.token) history.push("/login");
-  if (role !== "admin") history.push("/");
-  const UNAUTHORIZED = 401;
-  const FORBIDDEN = 403;
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      const { status } = error.response;
-      if (status === UNAUTHORIZED) {
-        history.push("/login");
-        localStorage.removeItem("token");
-      } else if (status === FORBIDDEN) {
-        history.push("/panel");
-      }
-      return Promise.reject(error);
+  useEffect(() => {
+    if (!localStorage.token) history.push("/login");
+    else {
+      dispatch(fetchRole());
+      if (role !== "admin") history.push("/");
+      const UNAUTHORIZED = 401;
+      const FORBIDDEN = 403;
+      axios.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          const { status } = error.response;
+          if (status === UNAUTHORIZED) {
+            history.push("/login");
+            localStorage.removeItem("token");
+          } else if (status === FORBIDDEN) {
+            history.push("/admin");
+          }
+          return Promise.reject(error);
+        }
+      );
     }
-  );
-
+  }, []);
   const columns = [
     {
       title: "Username",

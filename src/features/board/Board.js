@@ -12,7 +12,9 @@ import axios from "axios";
 
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchData } from "./boardSlicer";
+
+import { fetchParticipant } from "../participant/participantSlicer";
+import { fetchClubs } from "../clubs/clubsSlicer";
 import { fetchRole } from "../login/loginSlicer";
 
 function Board() {
@@ -20,9 +22,13 @@ function Board() {
 
   const dispatch = useDispatch();
   const { role } = useSelector((state) => state.login);
+  const { clubsResult } = useSelector((state) => state.clubs);
 
   useEffect(() => {
-    dispatch(fetchData());
+    dispatch(fetchParticipant());
+
+    dispatch(fetchClubs());
+    console.log(clubsResult);
   }, []);
 
   const [userState, setUserState] = useState({

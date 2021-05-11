@@ -1,23 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getParticipantUrl } from "../../constants";
+import { getAdminUrl } from "../../constants";
 import axios from "axios";
 
 const initState = {
   isLoading: false,
   email: "",
   username: "",
-  startingpoint: null,
-  pendingAuthorization: true,
-  score: 0,
-  flagsRemaining: null,
-  arsenal: null,
-  positions: [],
-
+  club_id: "",
   error: "",
 };
 
-const participantSlice = createSlice({
-  name: "participant",
+const adminSlice = createSlice({
+  name: "admin",
   initialState: initState,
   reducers: {
     fetchPending: (state) => {
@@ -28,11 +22,7 @@ const participantSlice = createSlice({
       state.error = "";
       state.email = payload.email;
       state.username = payload.username;
-      state.startingpoint = payload.startingpoint;
-      state.pendingAuthorization = payload.pendingAuthorization;
-      state.score = payload.score;
-      state.flagsRemaining = payload.flagsRemaining;
-      state.arsenal = payload.arsenal;
+      state.club_id = payload.club_id;
     },
     fetchFail: (state, { payload }) => {
       state.isLoading = false;
@@ -41,20 +31,17 @@ const participantSlice = createSlice({
     setLoading: (state, { payload }) => {
       state.loading = payload;
     },
-    setPositions: (state, { payload }) => {
-      state.loading = payload;
-    },
   },
 });
 
-export const fetchData = (data) => async (dispatch, getState) => {
+export const fetchAdmin = (data) => async (dispatch, getState) => {
   dispatch(setLoading(true));
 
   let jwt_token = "Bearer " + localStorage.token;
 
   const config = {
     method: "post",
-    url: getParticipantUrl,
+    url: getAdminUrl,
     headers: {
       "Content-Type": "application/json",
       Authorization: jwt_token,
@@ -69,11 +56,7 @@ export const fetchData = (data) => async (dispatch, getState) => {
         fetchSuccess({
           email: response.data.email,
           username: response.data.username,
-          startingpoint: response.data.startingpoint,
-          pendingAuthorization: response.data.pendingAuthorization,
-          score: response.data.score,
-          flagsRemaining: response.data.flagsRemaining,
-          arsenal: response.data.arsenal,
+          club_id: response.data.club_id,
         })
       );
     })
@@ -87,6 +70,6 @@ export const fetchData = (data) => async (dispatch, getState) => {
   return response;
 };
 
-const { reducer, actions } = participantSlice;
+const { reducer, actions } = adminSlice;
 export const { fetchPending, fetchFail, fetchSuccess, setLoading } = actions;
 export default reducer;
