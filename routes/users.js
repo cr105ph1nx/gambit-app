@@ -34,4 +34,7 @@ router.post(
   userController.adminProfile
 );
 
+// Get role from token
+router.post("/getRole", userController.loginRequired, userController.getRole);
+
 module.exports = router;

@@ -256,4 +256,14 @@ module.exports = {
       return res.status(401).json({ message: "Invalid token" });
     }
   },
+
+  async getRole(req, res, next) {
+    if (res.user) {
+      // get user role
+      res.send(res.user.role);
+      next();
+    } else {
+      return res.status(401).json({ message: "Invalid token" });
+    }
+  },
 };

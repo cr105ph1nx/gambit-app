@@ -8,11 +8,11 @@ POST http://localhost:3000/clubs
 Content-Type: application/json
 
 {
-    "id": 1,
-    "name": "OpenMindsClub",
-    "position": "e4#",
+    "_id": 5,
+    "name": "Operations Research Society",
+    "position": "d2",
     "logo": "img",
-    "description": "lorem ipsum lorem ipsum"
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
 }
 
 ###
@@ -21,8 +21,6 @@ Content-Type: application/json
 
 {
     "name": "OpenMindsClub",
-    "position": "e4",
-    "logo": "img",
     "description": "philosophie du libre open source"
 }
 

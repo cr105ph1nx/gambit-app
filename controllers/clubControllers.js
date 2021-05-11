@@ -38,7 +38,7 @@ module.exports = {
   // Creating a club
   async createClub(req, res, next) {
     const club = new Club({
-      _id: req.body.id,
+      _id: req.body._id,
       position: req.body.position,
       name: req.body.name,
       logo: req.body.logo,
