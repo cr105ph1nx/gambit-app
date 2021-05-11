@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { signInUrl } from "../../constants";
+import { signInUrl, getRole } from "../../constants";
 import axios from "axios";
 
 const initState = {
@@ -24,6 +24,9 @@ const loginSlice = createSlice({
     loginFail: (state, { payload }) => {
       state.isLoading = false;
       state.error = payload;
+    },
+    setRole: (state, { payload }) => {
+      state.role = payload.role;
     },
     setLoading: (state, { payload }) => {
       state.loading = payload;
@@ -61,6 +64,45 @@ export const fetchLogin = (data) => async (dispatch, getState) => {
   return response;
 };
 
+export const fetchRole = (data) => async (dispatch, getState) => {
+  dispatch(setLoading(true));
+
+  let jwt_token = "Bearer " + localStorage.token;
+
+  const config = {
+    method: "post",
+    url: getRole,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt_token,
+    },
+    data,
+  };
+
+  const response = await axios(config)
+    .then((response) => {
+      console.log(response);
+      dispatch(
+        setRole({
+          role: response.data,
+        })
+      );
+    })
+    .catch((error) => {
+      dispatch(loginFail(error.response.data.error));
+    });
+
+  dispatch(setLoading(false));
+
+  return response;
+};
+
 const { reducer, actions } = loginSlice;
-export const { loginPending, loginFail, loginSuccess, setLoading } = actions;
+export const {
+  loginPending,
+  loginFail,
+  loginSuccess,
+  setLoading,
+  setRole,
+} = actions;
 export default reducer;

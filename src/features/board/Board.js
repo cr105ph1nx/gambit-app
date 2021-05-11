@@ -13,17 +13,16 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchData } from "./boardSlicer";
+import { fetchRole } from "../login/loginSlicer";
 
 function Board() {
   let history = useHistory();
 
   const dispatch = useDispatch();
-  const { error, isLoading, info } = useSelector((state) => state.participant);
   const { role } = useSelector((state) => state.login);
 
   useEffect(() => {
     dispatch(fetchData());
-    console.log(info);
   }, []);
 
   const [userState, setUserState] = useState({
@@ -36,9 +35,11 @@ function Board() {
       { id: "n", name: "Knight", number: 2 },
     ],
   });
+
+  const [positions, setPositions] = useState({});
   const [squareStyles, setSquareStyles] = useState({});
-  const [positions, setPositions] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [startingPosition, setStartingPosition] = useState({});
 
   const [currentSquare, setCurrentSquare] = useState({});
@@ -124,23 +125,28 @@ function Board() {
     });
   }
 
-  if (!localStorage.token) history.push("/login");
-  if (role !== "participant") history.push("/");
-  const UNAUTHORIZED = 401;
-  const FORBIDDEN = 403;
-  axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      const { status } = error.response;
-      if (status === UNAUTHORIZED) {
-        history.push("/login");
-        localStorage.removeItem("token");
-      } else if (status === FORBIDDEN) {
-        history.push("/board");
-      }
-      return Promise.reject(error);
+  useEffect(() => {
+    if (!localStorage.token) history.push("/login");
+    else {
+      dispatch(fetchRole());
+      if (role !== "participant") history.push("/");
+      const UNAUTHORIZED = 401;
+      const FORBIDDEN = 403;
+      axios.interceptors.response.use(
+        (response) => response,
+        (error) => {
+          const { status } = error.response;
+          if (status === UNAUTHORIZED) {
+            history.push("/login");
+            localStorage.removeItem("token");
+          } else if (status === FORBIDDEN) {
+            history.push("/board");
+          }
+          return Promise.reject(error);
+        }
+      );
     }
-  );
+  }, []);
 
   const handleLogout = () => {
     history.push("/login");

@@ -1,8 +1,8 @@
 import { Form, Input, Button, Alert } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useHistory, Switch, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLogin } from "./loginSlicer";
+import { fetchLogin, fetchRole } from "./loginSlicer";
 
 import Board from "../board/Board";
 import Panel from "../panel/Panel";
@@ -57,10 +57,13 @@ function Login() {
     }
   };
 
-  if (localStorage.token) {
-    if (role === "participant") history.push("/board");
-    else if (role === "admin") history.push("/panel");
-  }
+  useEffect(() => {
+    if (localStorage.token) {
+      // redirect based on role
+      if (role === "participant") history.push("/board");
+      else if (role === "admin") history.push("/panel");
+    }
+  });
 
   return (
     <>
