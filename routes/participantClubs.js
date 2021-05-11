@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const participantClubControllers = require("../controllers/participantClubControllers");
+const clubControllers = require("../controllers/clubControllers");
 
 // Getting all participant/clubs
 router.get("/", participantClubControllers.index);
@@ -28,6 +29,13 @@ router.delete(
   "/:id",
   participantClubControllers.getParticipantClub,
   participantClubControllers.deleteParticipantClub
+);
+
+// Getting participants in a set club given by ID
+router.get(
+  "/getCurrentParticipants/:id",
+  clubControllers.getClub,
+  participantClubControllers.getCurrentParticipants
 );
 
 module.exports = router;

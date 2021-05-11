@@ -1,4 +1,5 @@
 const ParticipantClub = require("../models/participantClub");
+const Participant = require("../models/participant");
 
 module.exports = {
   // Find a participant|clubs by ID
@@ -83,5 +84,18 @@ module.exports = {
     }
 
     next();
+  },
+
+  // Getting all participants whose startingpoint is a set club id
+  async getCurrentParticipants(req, res, next) {
+    try {
+      // get list of participants and their pieces
+      const result = await ParticipantClub.find({ club_id: res.club._id })
+        .select(["participant_id", "piece"])
+        .populate("participant_id", "username");
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   },
 };

@@ -3,7 +3,7 @@ GET http://localhost:3000/admins
 ###
 GET http://localhost:3000/admins/6092824e4c22863c185d13b9
 
-###
+### 
 POST http://localhost:3000/admins
 Content-Type: application/json
 

@@ -1,7 +1,7 @@
 GET http://localhost:3000/clubs
 
 ###
-GET http://localhost:3000/clubs/608db71f6714cabe65a50120
+GET http://localhost:3000/clubs/1
 
 ###
 POST http://localhost:3000/clubs

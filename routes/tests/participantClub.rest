@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
     "club_id": 1,
-    "participant_id": 1,
+    "participant_id": "609a7478acbee02a889fa890",
     "piece": "q"
 }
 
@@ -24,4 +24,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/participantClubs/608dbdfcc7f520d8ed7a72c9
+DELETE http://localhost:3000/participantClubs/609a7e4a71ca7638ecf6a976
+
+### GET PARTICIPANTS IN CURRENT CASE
+GET http://localhost:3000/participantClubs/getCurrentParticipants/1
