@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdmin } from "../admin/adminSlicer";
 import { fetchClubParticipants } from "../panel/panelSlicer";
+import ManageModal from "./ManageModal";
 const { Text } = Typography;
 
 function Panel() {
@@ -12,6 +13,8 @@ function Panel() {
 
   const dispatch = useDispatch();
   const { participantsResults } = useSelector((state) => state.panel);
+  const { club_id } = useSelector((state) => state.admin);
+  const [refresh, setRefresh] = useState(false)
 
   const getClubParticipants = async () => {
     //get info of admin
@@ -47,9 +50,9 @@ function Panel() {
     }
 
     getClubParticipants();
-  }, []);
+  }, [refresh]);
 
-  function renderSwitch(param) {
+  const renderSwitch = (param) => {
     switch (param) {
       case "q":
         return "queen";
@@ -87,7 +90,7 @@ function Panel() {
       key: "action",
       render: (text, record) => (
         <Space size="middle">
-          <a>Manage {record.name}</a>
+          <ManageModal setRefresh={setRefresh} username = {record.participant_id.username} participant_id = {record.participant_id._id} club_id = {club_id} piece = {record.piece}id={record._id}/>
         </Space>
       ),
     },
