@@ -134,8 +134,7 @@ function Board() {
   useEffect(() => {
     if (!localStorage.token) history.push("/login");
     else {
-      dispatch(fetchRole());
-      if (role !== "participant") history.push("/");
+      // push history if token deleted or changed
       const UNAUTHORIZED = 401;
       const FORBIDDEN = 403;
       axios.interceptors.response.use(

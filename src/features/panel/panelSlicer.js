@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { getClubParticipantClubsUrl } from "../../constants/index";
+import { getClubParticipantsUrl } from "../../constants/index";
 
 const initState = {
   isLoading: false,
-  participantsResults: null,
+  participantsResults: [],
   error: "",
 };
 
@@ -32,22 +32,13 @@ const panelSlice = createSlice({
 export const fetchClubParticipants = (data) => async (dispatch, getState) => {
   dispatch(setLoading(true));
 
-  console.log("GET DATA", data);
-
-  let newUrl = getClubParticipantClubsUrl + `/:${data.club_id}`;
-
   const config = {
     method: "get",
-    url: newUrl,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data,
+    url: getClubParticipantsUrl + `/${getState().admin.club_id}`
   };
 
   const response = await axios(config)
     .then((response) => {
-      console.log("RESPONSE DATA", response.data);
       dispatch(fetchSuccess(response.data));
     })
     .catch((error) => {

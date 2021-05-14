@@ -1,31 +1,34 @@
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { Table, Space, Tag, Button } from "antd";
+import { Table, Space, Tag, Button, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAdmin } from "../admin/adminSlicer";
-import { fetchRole } from "../login/loginSlicer";
-import { fetchClubParticipants } from "./panelSlicer";
+import { fetchClubParticipants } from "../panel/panelSlicer";
+const { Text } = Typography;
 
 function Panel() {
   let history = useHistory();
 
   const dispatch = useDispatch();
-  const { club_id } = useSelector((state) => state.admin);
   const { participantsResults } = useSelector((state) => state.panel);
-  const { role } = useSelector((state) => state.login);
 
-  useEffect(() => {
-    dispatch(fetchAdmin());
-    dispatch(fetchClubParticipants({ club_id: club_id }));
-    console.log(participantsResults);
-  }, []);
+  const getClubParticipants = async () => {
+    //get info of admin
+    await dispatch(fetchAdmin())
+      .then(() => {
+        // get info of club participants
+        dispatch(fetchClubParticipants());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
     if (!localStorage.token) history.push("/login");
     else {
-      dispatch(fetchRole());
-      if (role !== "admin") history.push("/");
+      // push history if token deleted or changed
       const UNAUTHORIZED = 401;
       const FORBIDDEN = 403;
       axios.interceptors.response.use(
@@ -42,13 +45,31 @@ function Panel() {
         }
       );
     }
+
+    getClubParticipants();
   }, []);
+
+  function renderSwitch(param) {
+    switch (param) {
+      case "q":
+        return "queen";
+      case "b":
+        return "bishop";
+      case "n":
+        return "knight";
+      case "r":
+        return "rook";
+      default:
+        return "king";
+    }
+  }
+
   const columns = [
     {
       title: "Username",
-      dataIndex: "username",
-      key: "username",
-      render: (text) => <a>{text}</a>,
+      dataIndex: "participant_id",
+      key: "participant_id",
+      render: (participant_id) => <Text>{participant_id.username}</Text>,
     },
     {
       title: "Piece",
@@ -56,15 +77,11 @@ function Panel() {
       key: "piece",
       render: (tag) => (
         <Tag color={"geekblue"} key={tag}>
-          {tag.toUpperCase()}
+          {renderSwitch(tag).toUpperCase()}
         </Tag>
       ),
     },
-    {
-      title: "Starting Case",
-      dataIndex: "startingCase",
-      key: "startingCase",
-    },
+
     {
       title: "Action",
       key: "action",
@@ -73,21 +90,6 @@ function Panel() {
           <a>Manage {record.name}</a>
         </Space>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: "1",
-      username: "cr105ph1nx",
-      piece: "Queen",
-      startingCase: "OpenMindsClub",
-    },
-    {
-      key: "2",
-      username: "serinir",
-      piece: "Bishop",
-      startingCase: "Orbis",
     },
   ];
 
@@ -101,7 +103,7 @@ function Panel() {
       <Button type="primary" onClick={handleLogout}>
         Logout
       </Button>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={participantsResults} />
     </>
   );
 }

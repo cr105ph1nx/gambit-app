@@ -51,7 +51,6 @@ export const fetchAdmin = (data) => async (dispatch, getState) => {
 
   const response = await axios(config)
     .then((response) => {
-      console.log(response);
       dispatch(
         fetchSuccess({
           email: response.data.email,
@@ -69,6 +68,7 @@ export const fetchAdmin = (data) => async (dispatch, getState) => {
 
   return response;
 };
+
 
 const { reducer, actions } = adminSlice;
 export const { fetchPending, fetchFail, fetchSuccess, setLoading } = actions;
