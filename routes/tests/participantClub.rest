@@ -14,17 +14,15 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/participantClubs/608dbdfcc7f520d8ed7a72c9
+PATCH http://localhost:3000/participantClubs/609eb6c40d097bdcb5ad5f9b
 Content-Type: application/json
 
 {
-    "club_id": 1,
-    "participant_id": 2,
-    "piece": "q"
+    "piece": "r"
 }
 
 ###
-DELETE http://localhost:3000/participantClubs/609a7e4a71ca7638ecf6a976
+DELETE http://localhost:3000/participantClubs/609eae323c4bf6b68bd9ba92
 
 ### GET PARTICIPANTS IN CURRENT CASE
 GET http://localhost:3000/participantClubs/getCurrentParticipants/1

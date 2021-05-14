@@ -11,7 +11,7 @@ Content-Type: application/json
     "email": "omc@usthb.dz",
     "username": "OpenMindsClub",
     "password": "sfertery",
-    "club_id": 2
+    "club_id": 1
 }
 
 ###
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/admins/6092b06bc15d143d208bc865
+DELETE http://localhost:3000/admins/609b8a82fdb8b57cd4abd16b

@@ -1,4 +1,5 @@
 const Participant = require("../models/participant");
+const ParticipantClub = require("../models/participantClub");
 const User = require("../models/user");
 
 module.exports = {
@@ -41,26 +42,38 @@ module.exports = {
 
   // Creating a participant by ID
   async createParticipant(req, res, next) {
-    // create participant
-    const participant = new Participant({
-      email: req.body.email,
-      username: req.body.username,
-      startingpoint: req.body.startingpoint,
-      flagsRemaining: res.count - 1,
-    });
-
-    // create user
-    const user = new User({
-      email: req.body.email,
-      password: req.body.password,
-      role: "participant",
-    });
-
     try {
-      const newParticipant = await participant.save();
-      const newUser = await user.save();
+      // create participant
+      const participant = new Participant({
+        email: req.body.email,
+        username: req.body.username,
+        startingpoint: req.body.startingpoint,
+        flagsRemaining: res.count - 1,
+      });
 
-      res.status(201).json(newParticipant, newUser);
+      const newParticipant = await participant.save();
+
+      // create participantClub
+      const participantClub = new ParticipantClub({
+        club_id: req.body.startingpoint,
+        participant_id: newParticipant._id,
+        piece: "k",
+      });
+
+      // create user
+      const user = new User({
+        email: req.body.email,
+        password: req.body.password,
+        role: "participant",
+      });
+      const newUser = await user.save();
+      const newParticipantClub = await participantClub.save();
+
+      res.status(201).json({
+        participant: newParticipant,
+        user: newUser,
+        participantClub: newParticipantClub,
+      });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -117,6 +130,18 @@ module.exports = {
           }
         }
       );
+
+      // delete participantclub asssociated with participant account
+      await ParticipantClub.findOneAndDelete(
+        { participant_id: res.participant._id },
+        function (err, docs) {
+          if (err) console.log(err);
+          else {
+            console.log(docs);
+          }
+        }
+      );
+
       //delete particpaitn account
       await res.participant.remove();
 

@@ -1,5 +1,8 @@
 const ParticipantClub = require("../models/participantClub");
 const Participant = require("../models/participant");
+const WIN = 1,
+  DRAW = 0,
+  LOSS = -1;
 
 module.exports = {
   // Find a participant|clubs by ID
@@ -90,12 +93,111 @@ module.exports = {
   async getCurrentParticipants(req, res, next) {
     try {
       // get list of participants and their pieces
-      const result = await ParticipantClub.find({ club_id: res.club._id })
-        .select(["participant_id", "piece"])
+      const result = await ParticipantClub.find({
+        club_id: res.club._id,
+        handled: false,
+      })
+        .select(["_id", "participant_id", "piece"])
         .populate("participant_id", "username");
       res.json(result);
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
   },
+
+  async updateWin(req, res, next) {
+    // search for participant
+    const participant = await Participant.findById(req.body.participant_id);
+    // add to participant score
+    participant.score = participant.score + req.body.points;
+    // set pending to false
+    participant.pendingAuthorization = false;
+    // update participant
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+
+    // search for participantclub association
+    const participantClub = await ParticipantClub.findById(req.body.id);
+    // set handled to true
+    participantClub.handled = true;
+    // set result to WIN
+    participantClub.result = WIN;
+    // update participantclub
+    try {
+      const updatedParticipantClub = await participantClub.save();
+      res.json(updatedParticipantClub);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  async updateLoss(req, res, next) {
+    // search for participant
+    const participant = await Participant.findById(req.body.participant_id);
+    
+    // deduct the piece they used for the current position
+    for (let i in participant.arsenal) {
+      if (participant.arsenal[i].id === req.body.piece) {
+        participant.arsenal[i].number = participant.arsenal[i].number - 1;
+      }
+    }
+    participant.markModified("arsenal");
+    
+    // set pending to false
+    participant.pendingAuthorization = false;
+    // update participant
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+
+    // search for participantclub association
+    const participantClub = await ParticipantClub.findById(req.body.id);
+    // set handled to true
+    participantClub.handled = true;
+    // set result to WIN
+    participantClub.result = LOSS;
+    // update participantclub
+    try {
+      const updatedParticipantClub = await participantClub.save();
+      res.json(updatedParticipantClub);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  async updateDraw(req, res, next) {
+    // search for participant
+    const participant = await Participant.findById(req.body.participant_id);
+    // set pending to false
+    participant.pendingAuthorization = false;
+    // update participant
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+
+    // search for participantclub association
+    const participantClub = await ParticipantClub.findById(req.body.id);
+    // set handled to true
+    participantClub.handled = true;
+    // set result to WIN
+    participantClub.result = DRAW;
+    // update participantclub
+    try {
+      const updatedParticipantClub = await participantClub.save();
+      res.json(updatedParticipantClub);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
 };

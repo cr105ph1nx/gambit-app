@@ -8,14 +8,14 @@ POST http://localhost:3000/participants
 Content-Type: application/json
 
 {
-    "username": "cr105ph1nxx",
+    "username": "cr105ph1nx",
     "email": "lilia.mehamli@live.com",
     "password": "123456",
     "startingpoint": 1
 }
 
 ###
-PATCH http://localhost:3000/participants/6092aeaf106cac1f74ec21f3
+PATCH http://localhost:3000/participants/609eab719d1f99abe043adf6
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/participants/6092b1758fe5832dd4e404ad
+DELETE http://localhost:3000/participants/609eb6c40d097bdcb5ad5f9a

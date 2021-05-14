@@ -8,9 +8,9 @@ POST http://localhost:3000/clubs
 Content-Type: application/json
 
 {
-    "_id": 5,
-    "name": "Operations Research Society",
-    "position": "d2",
+    "_id": 1,
+    "name": "OpenMindsClub",
+    "position": "a6",
     "logo": "img",
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
 }

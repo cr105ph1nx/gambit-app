@@ -3,6 +3,7 @@ const router = express.Router();
 
 const participantClubControllers = require("../controllers/participantClubControllers");
 const clubControllers = require("../controllers/clubControllers");
+const userControllers = require("../controllers/userControllers");
 
 // Getting all participant/clubs
 router.get("/", participantClubControllers.index);
@@ -36,6 +37,29 @@ router.get(
   "/getCurrentParticipants/:id",
   clubControllers.getClub,
   participantClubControllers.getCurrentParticipants
+);
+
+
+// Getting participants in a set club given by ID
+router.post(
+  "/updateWin",
+  userControllers.loginRequired,
+  userControllers.adminRequired,
+  participantClubControllers.updateWin
+);
+
+router.post(
+  "/updateLoss",
+  userControllers.loginRequired,
+  userControllers.adminRequired,
+  participantClubControllers.updateLoss
+);
+
+router.post(
+  "/updateDraw",
+  userControllers.loginRequired,
+  userControllers.adminRequired,
+  participantClubControllers.updateDraw
 );
 
 module.exports = router;
