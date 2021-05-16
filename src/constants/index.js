@@ -17,6 +17,11 @@ export const updateWinUrl = "/updateWin";
 export const updateLossUrl = "/updateLoss";
 export const updateDrawUrl = "/updateDraw";
 
+export const updateStartingPositionUrl = "http://localhost:3000/participants/updateStartingPosition";
+export const updateStartingCaseUrl= "http://localhost:3000/participants/updateStartingCase";
+export const updateCurrentSquareUrl= "http://localhost:3000/participants/updateCurrentSquare";
+export const updateMoveUrl =   "http://localhost:3000/participantClubs/updateMove";
+
 
 
   

@@ -4,13 +4,14 @@ import axios from "axios";
 
 const initState = {
   isLoading: false,
+  _id: "",
   email: "",
   username: "",
   startingpoint: null,
   pendingAuthorization: true,
   score: 0,
   flagsRemaining: null,
-  arsenal: null,
+  arsenal: [],
   positions: [],
 
   error: "",
@@ -26,6 +27,7 @@ const participantSlice = createSlice({
     fetchSuccess: (state, { payload }) => {
       state.isLoading = false;
       state.error = "";
+      state._id = payload._id;
       state.email = payload.email;
       state.username = payload.username;
       state.startingpoint = payload.startingpoint;
@@ -66,6 +68,7 @@ export const fetchParticipant = (data) => async (dispatch, getState) => {
     .then((response) => {
       dispatch(
         fetchSuccess({
+          _id: response.data._id,
           email: response.data.email,
           username: response.data.username,
           startingpoint: response.data.startingpoint,
@@ -81,6 +84,7 @@ export const fetchParticipant = (data) => async (dispatch, getState) => {
       dispatch(fetchFail(error.message));
     });
 
+  
   dispatch(setLoading(false));
 
   return response;

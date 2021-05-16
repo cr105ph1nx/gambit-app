@@ -1,4 +1,28 @@
-export function isRookValid(currentSquare, desiredSquare) {
+export function pieceIsValid(piece, currentSquare, desiredSquare) {
+  // I have the piece, currentsquare, desiredsquare
+  let legal = false;
+
+  switch (piece) {
+    case "r":
+      legal = isRookValid(currentSquare, desiredSquare);
+      break;
+    case "b":
+      legal = isBishopValid(currentSquare, desiredSquare);
+      break;
+    case "n":
+      legal = isKnightValid(currentSquare, desiredSquare);
+      break;
+    case "q":
+      legal = isQueenValid(currentSquare, desiredSquare);
+      break;
+    default:
+      break;
+  }
+
+  return legal;
+}
+
+function isRookValid(currentSquare, desiredSquare) {
   if (
     currentSquare.row === desiredSquare.row ||
     currentSquare.col === desiredSquare.col
@@ -7,7 +31,7 @@ export function isRookValid(currentSquare, desiredSquare) {
   else return false;
 }
 
-export function isBishopValid(currentSquare, desiredSquare) {
+function isBishopValid(currentSquare, desiredSquare) {
   let I = currentSquare.row,
     P = currentSquare.col,
     J = desiredSquare.row,
@@ -18,7 +42,7 @@ export function isBishopValid(currentSquare, desiredSquare) {
   } else return false;
 }
 
-export function isQueenValid(currentSquare, desiredSquare) {
+function isQueenValid(currentSquare, desiredSquare) {
   if (
     isRookValid(currentSquare, desiredSquare) ||
     isBishopValid(currentSquare, desiredSquare)
@@ -27,7 +51,7 @@ export function isQueenValid(currentSquare, desiredSquare) {
   else return false;
 }
 
-export function isKnightValid(currentSquare, desiredSquare) {
+function isKnightValid(currentSquare, desiredSquare) {
   let I = currentSquare.row,
     P = currentSquare.col,
     J = desiredSquare.row,

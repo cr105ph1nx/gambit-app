@@ -4,7 +4,7 @@ import axios from "axios";
 
 const initState = {
   isLoading: false,
-  clubsResult: null,
+  clubsResult: [],
   error: "",
 };
 

@@ -1,3 +1,5 @@
+import flag from "../img/finish.png";
+
 export function getRow(notation) {
   let row = notation.charAt(0);
 
@@ -28,3 +30,29 @@ export function getCol(notation) {
   let colNumber = parseInt(col) - 1;
   return colNumber;
 }
+
+
+export const squareStyle = {
+  cursor: "pointer",
+  backgroundColor: "green",
+  backgroundImage: `url(${flag})`,
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+};
+
+export const startingpointStyle = { cursor: "pointer", backgroundColor: "red" };
+export const illegalCaseStyle = { cursor: "pointer", backgroundColor: "yellow" };
+export const currentCaseStyle = { cursor: "pointer", backgroundColor: "red" };
+export const unvisitedSquareStyle = {
+  cursor: "pointer",
+  backgroundColor: "green",
+  backgroundImage: `url(${flag})`,
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover",
+};
+export const visitedSquareStyle = {
+  cursor: "pointer",
+  backgroundColor: "green",
+};
