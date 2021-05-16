@@ -151,4 +151,57 @@ module.exports = {
     }
     next();
   },
+
+  async updateStartingPosition(req, res, next){
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.startingPosition = req.body.startingPosition;
+    participant.markModified("startingPosition");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+
+  },
+  async updateStartingCase(req, res, next){
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.startingCase = req.body.startingCase;
+    participant.markModified("startingCase");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+  async updateCurrentSquare(req, res, next){
+    console.log(req.body);
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.currentSquare = req.body.currentSquare;
+    participant.markModified("currentSquare");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+  async updateDesiredSquare(req, res, next){
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.desiredSquare = req.body.desiredSquare;
+    participant.markModified("desiredSquare");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  }
+
+
 };

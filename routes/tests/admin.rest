@@ -8,10 +8,10 @@ POST http://localhost:3000/admins
 Content-Type: application/json
 
 {
-    "email": "omc@usthb.dz",
-    "username": "OpenMindsClub",
+    "email": "orbis@usthb.dz",
+    "username": "Orbisclub",
     "password": "sfertery",
-    "club_id": 1
+    "club_id": 3
 }
 
 ###

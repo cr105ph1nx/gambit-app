@@ -62,4 +62,12 @@ router.post(
   participantClubControllers.updateDraw
 );
 
+
+router.post(
+  "/updateMove",
+  userControllers.loginRequired,
+  userControllers.participantRequired,
+  participantClubControllers.updateMove
+);
+
 module.exports = router;

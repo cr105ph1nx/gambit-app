@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/participantClubs/609eae323c4bf6b68bd9ba92
+DELETE http://localhost:3000/participantClubs/609f604c4f0004ee29d5023a
 
 ### GET PARTICIPANTS IN CURRENT CASE
 GET http://localhost:3000/participantClubs/getCurrentParticipants/1

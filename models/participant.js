@@ -47,6 +47,18 @@ const participantSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    startingPosition: {
+      type: Object
+    },
+    startingCase: {
+      type: Object
+    },
+    currentSquare: {
+      type: Object
+    },
+    desiredSquare:{
+      type: Object
+    }
   },
   { strict: false }
 );

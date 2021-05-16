@@ -138,7 +138,7 @@ module.exports = {
   async updateLoss(req, res, next) {
     // search for participant
     const participant = await Participant.findById(req.body.participant_id);
-    
+
     // deduct the piece they used for the current position
     for (let i in participant.arsenal) {
       if (participant.arsenal[i].id === req.body.piece) {
@@ -146,7 +146,7 @@ module.exports = {
       }
     }
     participant.markModified("arsenal");
-    
+
     // set pending to false
     participant.pendingAuthorization = false;
     // update participant
@@ -200,4 +200,44 @@ module.exports = {
     }
   },
 
+  async updateMove(req, res, next) {
+    try {
+      // add participant club record
+      const participantClub = new ParticipantClub({
+        club_id: req.body.club_id,
+        participant_id: req.body.participant_id,
+        piece: req.body.piece,
+      });
+
+      // create participant
+      const newParticipantClub = await participantClub.save();
+
+      // search for participant
+      const participant = await Participant.findById(req.body.participant_id);
+      // update startingpoint
+      participant.startingpoint = req.body.club_id;
+
+      // search for participantclub association record with participant and club id
+      var records = 0;
+      await ParticipantClub.countDocuments(
+        { club_id: req.body.club_id, participant_id: req.body.participant_id },
+        (err, count) => {
+          records = count;
+          // if record unique, decrement number of flagsremaining
+          if (records == 1) {
+            console.log("RECORD IS UNIQUE");
+            participant.flagsRemaining = participant.flagsRemaining - 1;
+          }
+        }
+      );
+      // make pendingauthorization true
+      participant.pendingAuthorization = true;
+      // update participant
+      const updatedParticipant = await participant.save();
+
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
 };
