@@ -50,7 +50,7 @@ function Panel() {
     }
 
     getClubParticipants();
-  }, [refresh]);
+  }, [participantsResults]);
 
   const renderSwitch = (param) => {
     switch (param) {

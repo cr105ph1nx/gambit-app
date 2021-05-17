@@ -4,6 +4,8 @@ import {
   updateStartingPositionUrl,
   updateStartingCaseUrl,
   updateCurrentSquareUrl,
+  updateStylesUrl,
+  getParticipantStylesUrl,
 } from "../../constants";
 import axios from "axios";
 import {
@@ -76,11 +78,11 @@ export const getStartingPosition = (data) => async (dispatch, getState) => {
         },
         data: {
           startingPosition: startingPosition,
-          participant_id: getState().participant._id
-        }
+          participant_id: getState().participant._id,
+        },
       };
 
-      const response = await axios(config)
+      await axios(config)
         .then((response) => {
           console.log(response.data);
           dispatch(setStartingPosition(startingPosition));
@@ -94,72 +96,131 @@ export const getStartingPosition = (data) => async (dispatch, getState) => {
 };
 
 export const getStartingCase = (data) => async (dispatch, getState) => {
-  let startingCase = {};
+  let isStart = getState().board.positions.length
+  if(isStart === 0){
+    let startingCase = {};
 
-  let clubs = getState().clubs.clubsResult;
-  let startingpoint = getState().participant.startingpoint;
-
-  for (let i in clubs) {
-    let club = clubs[i];
-
-    if (club._id === startingpoint) {
-      startingCase.notation = club.position;
-      startingCase.row = getRow(club.position);
-      startingCase.col = getCol(club.position);
-      startingCase.visited = true;
-
-      // update starting case
-      let jwt_token = "Bearer " + localStorage.token;
-      const config = {
-        method: "post",
-        url: updateStartingCaseUrl,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: jwt_token,
-        },
-        data: {
-          startingCase: startingCase,
-          participant_id: getState().participant._id
-        }
-      };
-
-      const response = await axios(config)
-        .then((response) => {
-          console.log(response.data);
-          dispatch(setStartingCase(startingCase));
-        })
-        .catch((error) => {
-          console.log(error.message);
-          dispatch(fetchFail(error.message));
-        });
+    let clubs = getState().clubs.clubsResult;
+    let startingpoint = getState().participant.startingpoint;
+  
+    for (let i in clubs) {
+      let club = clubs[i];
+  
+      if (club._id === startingpoint) {
+        startingCase.notation = club.position;
+        startingCase.row = getRow(club.position);
+        startingCase.col = getCol(club.position);
+        startingCase.visited = true;
+  
+        // update starting case
+        let jwt_token = "Bearer " + localStorage.token;
+        const config = {
+          method: "post",
+          url: updateStartingCaseUrl,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: jwt_token,
+          },
+          data: {
+            startingCase: startingCase,
+            participant_id: getState().participant._id,
+          },
+        };
+  
+        await axios(config)
+          .then((response) => {
+            dispatch(setStartingCase(startingCase));
+            dispatch(setCurrentSquare(startingCase));
+          })
+          .catch((error) => {
+            console.log(error.message);
+            dispatch(fetchFail(error.message));
+          });
+      }
     }
   }
+
 };
 
-export const setBoardSettings = (data) => async (dispatch, getState) => {
-  let squareStyles = {};
-  let tmpPositions = [];
+export const fetchStyles = (data) => async (dispatch, getState) => {
+  let jwt_token = "Bearer " + localStorage.token;
+  const config = {
+    method: "get",
+    url: getParticipantStylesUrl + `/${getState().participant._id}`,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt_token,
+    },
+    data
+  };
 
-  let startingCase = getState().board.startingCase;
-  let clubs = getState().clubs.clubsResult;
-
-  for (let i in clubs) {
-    let club = clubs[i];
-    // add style to case
-    if (club.position === startingCase.notation) {
-      squareStyles[club.position] = startingpointStyle;
-    } else {
-      squareStyles[club.position] = squareStyle;
-    }
-
-    // save position to array
-    await dispatch(addPosition(club.position)).then((result) => {
-      tmpPositions.push(result);
+  await axios(config)
+    .then((response) => {
+      dispatch(setPositions(response.data.positions));
+      dispatch(setSquareStyles(response.data.squareStyles));
+      dispatch(setStartingCase(response.data.startingCase));
+      dispatch(setCurrentSquare(response.data.currentSquare));
+    })
+    .catch((error) => {
+      console.log(error.message);
+      dispatch(fetchFail(error.message));
     });
-  }
 
-  dispatch(setPositions(tmpPositions));
-  dispatch(setSquareStyles(squareStyles));
+
+};
+
+
+export const setBoardSettings = (data) => async (dispatch, getState) => {
+  let isStart = getState().board.positions.length
+  if(isStart === 0){
+    let squareStyles = {};
+    let tmpPositions = [];
+  
+    let startingCase = getState().board.startingCase;
+    let clubs = getState().clubs.clubsResult;
+  
+    for (let i in clubs) {
+      let club = clubs[i];
+      // add style to case
+      if (club.position === startingCase.notation) {
+        squareStyles[club.position] = startingpointStyle;
+      } else {
+        squareStyles[club.position] = squareStyle;
+      }
+  
+      // save position to array
+      await dispatch(addPosition(club.position)).then((result) => {
+        tmpPositions.push(result);
+      });
+    }
+  
+    // update positions and board styles
+    let jwt_token = "Bearer " + localStorage.token;
+    const config = {
+      method: "post",
+      url: updateStylesUrl,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: jwt_token,
+      },
+      data: {
+        positions: tmpPositions,
+        squareStyles: squareStyles,
+        participant_id: getState().participant._id,
+      },
+    };
+  
+    await axios(config)
+      .then((response) => {
+        console.log(response.data);
+        dispatch(setPositions(tmpPositions));
+        dispatch(setSquareStyles(squareStyles));
+      })
+      .catch((error) => {
+        console.log(error.message);
+        dispatch(fetchFail(error.message));
+      });
+  }
 };
 
 export const addPosition = (position) => async (dispatch, getState) => {
@@ -171,63 +232,38 @@ export const addPosition = (position) => async (dispatch, getState) => {
 
   if (position === startingCase.notation) {
     tmp.visited = true;
-
-    // update starting case
-    let jwt_token = "Bearer " + localStorage.token;
-    const config = {
-      method: "post",
-      url: updateCurrentSquareUrl,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: jwt_token,
-      },
-      data: {
-        currentSquare: tmp,
-        participant_id: getState().participant._id
-      }
-    };
-
-    const response = await axios(config)
-      .then((response) => {
-        console.log(response.data);
-        dispatch(setCurrentSquare(tmp));
-      })
-      .catch((error) => {
-        console.log(error.message);
-        dispatch(fetchFail(error.message));
-      });
   } else {
     tmp.visited = false;
   }
 
+  // update starting case
+  let jwt_token = "Bearer " + localStorage.token;
+  const config = {
+    method: "post",
+    url: updateCurrentSquareUrl,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: jwt_token,
+    },
+    data: {
+      currentSquare: tmp,
+      participant_id: getState().participant._id,
+    },
+  };
+
+  await axios(config)
+    .then((response) => {
+      console.log(response.data);
+      dispatch(setCurrentSquare(tmp));
+    })
+    .catch((error) => {
+      console.log(error.message);
+      dispatch(fetchFail(error.message));
+    });
+
   return tmp;
 };
 
-export const updateStyles = () => async (dispatch, getState) => {
-  let squareStyles = {};
-  let positions = getState().board.positions;
-  let currentSquare = getState().board.currentSquare;
-  let desiredSquare = getState().board.desiredSquare;
-
-  // change styles of current and starting square
-  for (let i in positions) {
-    let position = positions[i];
-    // if it is the square the user is coming from, make it yellow to indicate that it is illegal:
-    if (position.notation === currentSquare.notation)
-      squareStyles[position.notation] = illegalCaseStyle;
-    // if current sqaure, make it red
-    else if (position.notation === desiredSquare.notation)
-      squareStyles[position.notation] = currentCaseStyle;
-    // if neither illegal nor current, check if it is visited
-    else if (position.visited)
-      squareStyles[position.notation] = visitedSquareStyle;
-    // if it is not visited, remove flag
-    else if (!position.visited)
-      squareStyles[position.notation] = unvisitedSquareStyle;
-  }
-
-  dispatch(setSquareStyles(squareStyles));
-};
 export const updateStartingCase =
   (currentSquare) => async (dispatch, getState) => {
     dispatch(setStartingCase(currentSquare));
@@ -246,6 +282,32 @@ export const swapDesiredToCurrentCase =
     dispatch(setCurrentSquare(tmp));
   };
 
+export const updateStyles = () => async (dispatch, getState) => {
+  let squareStyles = {};
+  let positions = getState().board.positions;
+  let currentSquare = getState().board.currentSquare;
+  let desiredSquare = getState().board.desiredSquare;
+
+  // change styles of current and starting square
+  for (let i in positions) {
+    let position = positions[i];
+    // if it is the square the user is coming from, make it yellow to indicate that it is illegal:
+    if (position.notation === getState().board.startingCase.notation)
+      squareStyles[position.notation] = illegalCaseStyle;
+    // if current sqaure, make it red
+    else if (position.notation === desiredSquare.notation)
+      squareStyles[position.notation] = startingpointStyle;
+    // if neither illegal nor current, check if it is visited
+    else if (position.visited)
+      squareStyles[position.notation] = visitedSquareStyle;
+    // if it is not visited, remove flag
+    else if (!position.visited)
+      squareStyles[position.notation] = unvisitedSquareStyle;
+  }
+
+  dispatch(setSquareStyles(squareStyles));
+};
+
 export const updateMove = (data) => async (dispatch, getState) => {
   let currentSquare = getState().board.currentSquare;
   let desiredSquare = getState().board.desiredSquare;
@@ -254,7 +316,6 @@ export const updateMove = (data) => async (dispatch, getState) => {
   dispatch(updateStartingCase(currentSquare));
   // swap current and desired
   dispatch(swapDesiredToCurrentCase(desiredSquare));
-
   // move white king to desiredsquare
   let position = {};
   position[desiredSquare.notation] = "wK";
@@ -276,7 +337,7 @@ export const updateMove = (data) => async (dispatch, getState) => {
       club_id: data.club_id,
       piece: data.piece,
       currentSquare: getState().board.currentSquare,
-      desiredSquare: getState().board.desiredSquare,
+      startingCase: getState().board.startingCase,
       startingPosition: getState().board.startingPosition,
       squareStyles: getState().board.squareStyles,
     },

@@ -25,6 +25,7 @@ function Popup(props) {
         piece: piece,
       })
     );
+    props.setRefresh(true);
   }
 
   return (

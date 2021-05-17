@@ -12,8 +12,6 @@ const initState = {
   score: 0,
   flagsRemaining: null,
   arsenal: [],
-  positions: [],
-
   error: "",
 };
 
@@ -42,10 +40,7 @@ const participantSlice = createSlice({
     },
     setLoading: (state, { payload }) => {
       state.loading = payload;
-    },
-    setPositions: (state, { payload }) => {
-      state.loading = payload;
-    },
+    }
   },
 });
 
