@@ -16,12 +16,11 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:3000/clubs/1
+PATCH http://localhost:3000/clubs/2
 Content-Type: application/json
 
 {
-    "name": "OpenMindsClub",
-    "description": "philosophie du libre open source"
+    "position": "d8"
 }
 
 ###

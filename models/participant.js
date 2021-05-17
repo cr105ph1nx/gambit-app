@@ -58,6 +58,10 @@ const participantSchema = mongoose.Schema(
     },
     desiredSquare:{
       type: Object
+    },
+    boardSetting: {
+      positions: {type: Array, default: []},
+      squareStyles: {type: Object, default: {}}
     }
   },
   { strict: false }

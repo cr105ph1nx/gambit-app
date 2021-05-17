@@ -15,6 +15,15 @@ router.get(
   participantControllers.getParticipantByID
 );
 
+// Getting one participant styles by id
+router.get(
+  "/getStyles/:id",
+  userControllers.loginRequired,
+  userControllers.participantRequired,
+  participantControllers.getParticipant,
+  participantControllers.getParticipantStylesByID,
+
+);
 // Creating a participant
 router.post(
   "/",
@@ -61,5 +70,12 @@ router.post(
   userControllers.loginRequired,
   userControllers.participantRequired,
   participantControllers.updateDesiredSquare
+);
+
+router.post(
+  "/updateStyles",
+  userControllers.loginRequired,
+  userControllers.participantRequired,
+  participantControllers.updateStyles
 );
 module.exports = router;

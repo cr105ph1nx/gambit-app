@@ -11,15 +11,6 @@ const adminSchema = mongoose.Schema({
       "Please fill a valid email address",
     ],
   },
-  username: {
-    type: String,
-    required: "Username is required",
-    unique: true,
-    match: [
-      /^[a-zA-Z0-9](_(?!(\.|_))|\.(?!(_|\.))|[a-zA-Z0-9]){6,18}[a-zA-Z0-9]$/,
-      "Please fill a valid username",
-    ],
-  },
   club_id: {
     type: Number,
     required: "Club ID is required",

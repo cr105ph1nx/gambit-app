@@ -23,4 +23,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/participants/609fe3bebd6fd5c325f917c8
+DELETE http://localhost:3000/participants/60a1cac03775b37bd5ecd8a5

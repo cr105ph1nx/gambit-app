@@ -214,8 +214,12 @@ module.exports = {
 
       // search for participant
       const participant = await Participant.findById(req.body.participant_id);
-      // update startingpoint
+      // update startingpoint and styles
       participant.startingpoint = req.body.club_id;
+      participant.currentSquare = req.body.currentSquare;
+      participant.startingCase = req.body.startingCase;
+      participant.boardSetting.squareStyles = req.body.squareStyles;
+      participant.markModified("boardSetting");
 
       // search for participantclub association record with participant and club id
       var records = 0;
@@ -225,7 +229,6 @@ module.exports = {
           records = count;
           // if record unique, decrement number of flagsremaining
           if (records == 1) {
-            console.log("RECORD IS UNIQUE");
             participant.flagsRemaining = participant.flagsRemaining - 1;
           }
         }

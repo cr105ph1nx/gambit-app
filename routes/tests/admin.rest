@@ -8,10 +8,9 @@ POST http://localhost:3000/admins
 Content-Type: application/json
 
 {
-    "email": "orbis@usthb.dz",
-    "username": "Orbisclub",
+    "email": "ors@usthb.dz",
     "password": "sfertery",
-    "club_id": 3
+    "club_id": 4
 }
 
 ###
@@ -23,4 +22,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/admins/609b8a82fdb8b57cd4abd16b
+DELETE http://localhost:3000/admins/60a1e7120f07c5ed699c4cf2

@@ -40,6 +40,17 @@ module.exports = {
     next();
   },
 
+  // Getting a participant styles by ID
+  async getParticipantStylesByID(req, res, next) {
+    res.send({
+      positions: res.participant.boardSetting.positions,
+      squareStyles: res.participant.boardSetting.squareStyles,
+      startingCase: res.participant.startingCase,
+      currentSquare: res.participant.currentSquare,
+    });
+
+  },
+
   // Creating a participant by ID
   async createParticipant(req, res, next) {
     try {
@@ -152,7 +163,7 @@ module.exports = {
     next();
   },
 
-  async updateStartingPosition(req, res, next){
+  async updateStartingPosition(req, res, next) {
     const participant = await Participant.findById(req.body.participant_id);
     participant.startingPosition = req.body.startingPosition;
     participant.markModified("startingPosition");
@@ -163,9 +174,9 @@ module.exports = {
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
-
   },
-  async updateStartingCase(req, res, next){
+
+  async updateStartingCase(req, res, next) {
     const participant = await Participant.findById(req.body.participant_id);
     participant.startingCase = req.body.startingCase;
     participant.markModified("startingCase");
@@ -177,7 +188,7 @@ module.exports = {
       res.status(400).json({ message: err.message });
     }
   },
-  async updateCurrentSquare(req, res, next){
+  async updateCurrentSquare(req, res, next) {
     console.log(req.body);
     const participant = await Participant.findById(req.body.participant_id);
     participant.currentSquare = req.body.currentSquare;
@@ -190,7 +201,7 @@ module.exports = {
       res.status(400).json({ message: err.message });
     }
   },
-  async updateDesiredSquare(req, res, next){
+  async updateDesiredSquare(req, res, next) {
     const participant = await Participant.findById(req.body.participant_id);
     participant.desiredSquare = req.body.desiredSquare;
     participant.markModified("desiredSquare");
@@ -201,7 +212,45 @@ module.exports = {
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
-  }
+  },
 
+  async updateStartingCase(req, res, next) {
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.startingCase = req.body.startingCase;
+    participant.markModified("startingCase");
 
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+  async updateCurrentSquare(req, res, next) {
+    console.log(req.body);
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.currentSquare = req.body.currentSquare;
+    participant.markModified("currentSquare");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
+
+  async updateStyles(req, res, next) {
+    const participant = await Participant.findById(req.body.participant_id);
+    participant.boardSetting.positions = req.body.positions;
+    participant.boardSetting.squareStyles = req.body.squareStyles;
+    participant.markModified("boardSetting");
+
+    try {
+      const updatedParticipant = await participant.save();
+      res.json(updatedParticipant);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  },
 };

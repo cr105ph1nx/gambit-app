@@ -1,7 +1,7 @@
 GET http://localhost:3000/participantClubs
 
 ###
-GET http://localhost:3000/participantClubs/608dbdcac7f520d8ed7a72c8
+GET http://localhost:3000/participantClubs/60a1c5143775b37bd5ecd896
 
 ###
 POST http://localhost:3000/participantClubs
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:3000/participantClubs/609f604c4f0004ee29d5023a
+DELETE http://localhost:3000/participantClubs/60a1dbe3fc5aeec5d5d59c57
 
 ### GET PARTICIPANTS IN CURRENT CASE
 GET http://localhost:3000/participantClubs/getCurrentParticipants/1
